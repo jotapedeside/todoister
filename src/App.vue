@@ -55,7 +55,7 @@ export default {
   name: 'App',
   data(){
     return{
-      taskVisualizer: "",
+      taskVisualizer: "Tasks Done",
       pressed: null,
       pages: 1,
       currentPage: 1,
@@ -137,7 +137,7 @@ export default {
       })
       console.log(id);
     },
-    //axios DELETE method to delete tasks
+    //axios DELETE method
     deleteTask: function($event){
       var id = $event.taskId;
       axios.delete(`http://localhost:3000/task/${id}`).then(res =>{
@@ -148,15 +148,19 @@ export default {
         console.log(error);
       });
     },
+    //checks pressed state and returns list accordingly
     pageValidation(){
       if(this.pressed == false){
+        console.log(this.pressed);
         this.taskVisualizer = "Tasks Done";
         return this.listTasks(1, 10, 'asc');
       } else {
+        console.log(this.pressed);
         this.taskVisualizer = "Tasks Not Done";
         return this.listDoneTasks(1, 10, 'asc');
       }
     },
+    //change pressed value and calls pageValidation
     pressedChecker(){      
         this.pressed = !this.pressed;
         this.pageValidation();
