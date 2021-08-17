@@ -37,10 +37,12 @@
     <div>
         <b-button @click.prevent="addTask()">Add task!</b-button>
     </div>
-
+    <div class="inputParam my-3">      
+        <b-button @click.prevent="listDoneTasks(1, 10, 'asc')">{{taskVisualizer}}</b-button>
+    </div>
     <div>
       <div v-for="(item,index) in tasks" :key="index">
-        <Task :name="item.name" :description="item.description" :status="item.status"/>
+        <Task :id="item._id" :name="item.name" :description="item.description" :status="item.status" @deleteMe="deleteTask($event)" @completeMe="completeTask($event)"/>
       </div>
     </div>
   </div>
@@ -53,6 +55,8 @@ export default {
   name: 'App',
   data(){
     return{
+      taskVisualizer: "Tasks Done",
+      pressed: false,
       pages: 1,
       currentPage: 1,
       pageLimit: 10,
@@ -110,6 +114,47 @@ export default {
       }).catch(error => {
       console.log(error);
       })
+    },
+    listDoneTasks(page, pageLimit, sort){
+      axios.get(`http://localhost:3000/done/${page}/${pageLimit}/${sort}`).then(res =>{
+        this.tasks = res.data.data;
+        this.pages = Math.ceil(Math.max(1, res.data.count/10));
+        this.currentPage = page;
+        this.pageLimit = pageLimit;
+        this.total = res.data.count;
+        
+        if(this.pressed === false){
+          this.taskVisualizer = "Tasks Done";
+          this.pressed = !this.pressed;
+          this.listTasks(1, 10, 'asc');
+        } else {
+          this.taskVisualizer = "Tasks Not Done";
+          this.pressed = !this.pressed;
+        }
+        console.log(this.pressed);
+                
+
+      }).catch(error => {
+      console.log(error);
+      })
+    },
+    completeTask: function($event){
+      var id = $event.taskId;
+      axios.patch(`http://localhost:3000/task/${id}`).then(res =>{        
+          this.listTasks(this.currentPage, 10, "asc");
+          console.log(res);
+      })
+      console.log(id);
+    },
+    deleteTask: function($event){
+      var id = $event.taskId;
+      axios.delete(`http://localhost:3000/task/${id}`).then(res =>{
+          this.listTasks(this.currentPage, 10, "asc");
+          console.log(res);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
   },
   computed:{

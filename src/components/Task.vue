@@ -6,14 +6,13 @@
                     <div class="d-flex flex-row justify-content-between align-items-center">
                         <div></div>
                     <h3 class="title is-4">{{name}}</h3>
-                        <b-button>
+                        <b-button @click="sendEventDelete">
                             <b-icon-x font-scale="2"></b-icon-x>
                         </b-button>
                     </div>
                     <p class="subtitle is-6">{{description}}</p>
-                    <p class="subtitle is-6">{{status}}</p>
                     <div>
-                        <b-button @click="changeStuff" variant="primary w-100">
+                        <b-button @click="sendEventComplete" variant="primary w-100">
                             <b-icon icon="check" font-scale="2"></b-icon>
                         </b-button>
                     </div>
@@ -26,6 +25,7 @@
 <script>
 export default {
     props:{
+        id: String,
         name: String,
         description: String,
         status: Boolean
@@ -36,8 +36,11 @@ export default {
         }
     },
     methods:{
-        changeStuff(){
-            this.status = !this.status;
+        sendEventComplete: function(){
+            this.$emit("completeMe", {taskId: this.id, component: this});
+        },
+        sendEventDelete: function(){
+            this.$emit("deleteMe", {taskId: this.id, component: this});
         }
     }
 }
