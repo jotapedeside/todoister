@@ -38,7 +38,7 @@
         <b-button @click.prevent="addTask()">Add task!</b-button>
     </div>
     <div>      
-        <b-button class="inputParam my-3" @click.prevent="listDoneTasks(1, 10, 'asc')">{{taskVisualizer}}</b-button>
+        <b-button class="inputParam my-3" @click.prevent="pressedChecker()">{{taskVisualizer}}</b-button>
     </div>
     <div>
       <div v-for="(item,index) in tasks" :key="index">
@@ -55,8 +55,8 @@ export default {
   name: 'App',
   data(){
     return{
-      taskVisualizer: "Tasks Done",
-      pressed: false,
+      taskVisualizer: "",
+      pressed: null,
       pages: 1,
       currentPage: 1,
       pageLimit: 10,
@@ -89,7 +89,7 @@ export default {
       } else {
         this.isValid.description = false;
       }
-
+      //axios POST method to add tasks
       if(this.validation){
         let obj = {
         name: this.task.name,
@@ -104,6 +104,7 @@ export default {
         });
       }
     },
+    //axios GET method to list tasks
     listTasks(page, pageLimit, sort){
       axios.get(`http://localhost:3000/task/${page}/${pageLimit}/${sort}`).then(res =>{
         this.tasks = res.data.data;
@@ -115,6 +116,7 @@ export default {
       console.log(error);
       })
     },
+    //axios GET method to list tasks done
     listDoneTasks(page, pageLimit, sort){
       axios.get(`http://localhost:3000/done/${page}/${pageLimit}/${sort}`).then(res =>{
         this.tasks = res.data.data;
@@ -122,39 +124,42 @@ export default {
         this.currentPage = page;
         this.pageLimit = pageLimit;
         this.total = res.data.count;
-        
-        if(this.pressed === false){
-          this.taskVisualizer = "Tasks Done";
-          this.pressed = !this.pressed;
-          this.listTasks(1, 10, 'asc');
-        } else {
-          this.taskVisualizer = "Tasks Not Done";
-          this.pressed = !this.pressed;
-        }
-        console.log(this.pressed);
-                
-
       }).catch(error => {
       console.log(error);
       })
     },
+    //axios PATCH method to change task status
     completeTask: function($event){
       var id = $event.taskId;
-      axios.patch(`http://localhost:3000/task/${id}`).then(res =>{        
-          this.listTasks(this.currentPage, 10, "asc");
+      axios.patch(`http://localhost:3000/task/${id}`).then(res =>{
+          this.pageValidation();
           console.log(res);
       })
       console.log(id);
     },
+    //axios DELETE method to delete tasks
     deleteTask: function($event){
       var id = $event.taskId;
       axios.delete(`http://localhost:3000/task/${id}`).then(res =>{
-          this.listTasks(this.currentPage, 10, "asc");
+          this.pageValidation();
           console.log(res);
       })
       .catch(function (error) {
         console.log(error);
       });
+    },
+    pageValidation(){
+      if(this.pressed == false){
+        this.taskVisualizer = "Tasks Done";
+        return this.listTasks(1, 10, 'asc');
+      } else {
+        this.taskVisualizer = "Tasks Not Done";
+        return this.listDoneTasks(1, 10, 'asc');
+      }
+    },
+    pressedChecker(){      
+        this.pressed = !this.pressed;
+        this.pageValidation();
     }
   },
   computed:{

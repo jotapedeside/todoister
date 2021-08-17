@@ -36,9 +36,11 @@ export default {
         }
     },
     methods:{
+        //send Event complete
         sendEventComplete: function(){
             this.$emit("completeMe", {taskId: this.id, component: this});
         },
+        //send Event delete
         sendEventDelete: function(){
             this.$emit("deleteMe", {taskId: this.id, component: this});
         }
