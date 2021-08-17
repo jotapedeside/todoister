@@ -34,8 +34,7 @@
             </b-form-invalid-feedback>
         </div>
       </div>
-
-    <div>    
+    <div>
         <b-button @click.prevent="addTask()">Add task!</b-button>
     </div>
 
@@ -48,6 +47,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Task from './components/Task.vue'
 export default {
   name: 'App',
@@ -69,16 +69,21 @@ export default {
   },
   methods: {
     addTask(){
-      if(this.task.description.length > 1){
-        this.isValid.description = true;
-      } else {
-        this.isValid.description = false;
-      }
-
+      axios.get(`${this.API_ENDPOINT}/task/`).then(res => 
+      {
+        this.tasks = res.data.results;
+      })
+      //checks if input task.name is valid
       if(this.task.name.length > 1){
         this.isValid.name = true;
       } else {
         this.isValid.name = false;
+      }
+      //checks if input task.description is valid
+      if(this.task.description.length > 1){
+        this.isValid.description = true;
+      } else {
+        this.isValid.description = false;
       }
 
       if(this.validation){
