@@ -37,8 +37,12 @@
     <div>
         <b-button @click.prevent="addTask()">Add task!</b-button>
     </div>
+      
+      <Task name="example"/>
+      
+      <Task name="example"/>
 
-    <div class="column is-half is-offset-one-quarter">
+    <div>
       <div v-for="(item,index) in tasks" :key="index">
         <Task :name="item.name" :description="item.description" :status="item.status"/>
       </div>
@@ -59,7 +63,7 @@ export default {
       },
       task: {
         name: "",
-        description: ""        
+        description: ""
       },
       tasks: []
     }
@@ -69,11 +73,12 @@ export default {
   },
   methods: {
     addTask(){
-      axios.get(`${this.API_ENDPOINT}/task/`).then(res => 
-      {
-        this.tasks = res.data.results;
-      })
+      /*var config = {
+        method: 'post',
+        url: 'http://localhost:8000/task'
+      }*/
       //checks if input task.name is valid
+      
       if(this.task.name.length > 1){
         this.isValid.name = true;
       } else {
@@ -87,7 +92,92 @@ export default {
       }
 
       if(this.validation){
-        console.log("Valid");
+        let obj = {
+        name: this.task.name,
+        description: this.task.description
+        }
+        axios.post("http://localhost:3000/task", obj).then(() =>{
+          console.log(obj);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        
+
+        /*var data = JSON.stringify({
+          name: "",
+          description: ""
+        });
+
+        var config = {
+          method: 'post',
+          url: 'http://localhost:3000/task',
+          headers: { 
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });*/
+        
+        /*axios({
+          method: 'post',
+          url: 'http://localhost:3000/task',
+          data: {
+            name: 'Fred',
+            description: 'Flintstone'
+          }
+        });*/
+
+        /*axios.post('http://localhost:3000/task', {
+          name: 'Fred',
+          description: 'Flintstone'
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });*/
+        
+        /*axios({
+        method: 'post',
+        url: 'http://localhost:3000/task',
+        data: {
+          name: "teste",
+          description: "mais teste"
+        }
+        }).then(res =>{
+          let results = res.data;
+          var response = res.data;
+          
+          console.log("ENTROU");
+          console.log(results);
+          console.log(response);
+          console.log(res);
+        }).catch(error => {
+        console.log(error);
+        });*/
+        /*axios.post(`/task/`).then(res => 
+        {
+          console.log("ENTROU");
+          console.log(this.task);
+          console.log(res);
+          //this.tasks = res.data.results;
+        })*/
+        /*axios(config).then(function (res) 
+        {
+          console.log("ENTROU");
+          console.log(this.task);
+          console.log(res);
+          //this.tasks = res.data.results;
+        })*/
       }
     }
   },
