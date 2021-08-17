@@ -1,17 +1,24 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">    
+    <div class="column is-half is-offset-one-quarter">
+      <div v-for="(task,index) in tasks" :key="index">
+        <Task :name="task.name" :description="task.description" :num="index+1" :status="false"/>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Task from './components/Task.vue'
 export default {
   name: 'App',
+  data(){
+    return{
+      tasks: []
+    }
+  },
   components: {
-    HelloWorld
+    Task
   }
 }
 </script>
