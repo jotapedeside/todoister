@@ -37,8 +37,8 @@
     <div>
         <b-button @click.prevent="addTask()">Add task!</b-button>
     </div>
-    <div class="inputParam my-3">      
-        <b-button @click.prevent="listDoneTasks(1, 10, 'asc')">{{taskVisualizer}}</b-button>
+    <div>      
+        <b-button class="inputParam my-3" @click.prevent="listDoneTasks(1, 10, 'asc')">{{taskVisualizer}}</b-button>
     </div>
     <div>
       <div v-for="(item,index) in tasks" :key="index">
