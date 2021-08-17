@@ -5,13 +5,13 @@
                 <div>
                     <div class="d-flex flex-row justify-content-between align-items-center">
                         <div></div>
-                    <h3 class="title is-4">{{task.name}}</h3>
+                    <h3 class="title is-4">{{name}}</h3>
                         <b-button>
                             <b-icon-x font-scale="2"></b-icon-x>
                         </b-button>
                     </div>
-                    <p class="subtitle is-6">{{task.description}}</p>
-                    <p class="subtitle is-6">{{task.status}}</p>
+                    <p class="subtitle is-6">{{description}}</p>
+                    <p class="subtitle is-6">{{status}}</p>
                     <div>
                         <b-button @click="changeStuff" variant="primary w-100">
                             <b-icon icon="check" font-scale="2"></b-icon>
@@ -31,17 +31,13 @@ export default {
         status: Boolean
     },
     data(){
-        return{            
-            task: {
-                name: "Tarefa simples",
-                description: "tarefa elaboradamente complexa",
-                status: false
-            }
+        return{
+
         }
     },
     methods:{
         changeStuff(){
-            this.task.status = !this.task.status;
+            this.status = !this.status;
         }
     }
 }
